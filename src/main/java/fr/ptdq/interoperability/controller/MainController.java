@@ -8,6 +8,8 @@ package fr.ptdq.interoperability.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import static fr.ptdq.interoperability.Program.question;
 
 /**
  *
@@ -15,11 +17,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class MainController
 {
-    
+
     @RequestMapping("/")
-    public String page(Model model)
+    public String questionInterface()
     {
         return "index";
     }
-    
+
+    @RequestMapping("/response")
+    public String response(@RequestParam(required = false) String questiontext, Model m)
+    {
+        if (questiontext != null)
+        {
+            String response = question(questiontext);
+            m.addAttribute("questiontext", questiontext);
+            m.addAttribute("response", response);
+            return "response";
+        }
+        return "redirect:/";
+    }
 }
