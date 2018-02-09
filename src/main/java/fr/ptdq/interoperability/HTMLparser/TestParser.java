@@ -5,6 +5,7 @@
  */
 package fr.ptdq.interoperability.HTMLparser;
 
+import java.util.HashMap;
 import java.util.List;
 import jdk.nashorn.internal.objects.NativeArray;
 
@@ -22,6 +23,13 @@ public class TestParser
         listTeam.forEach(i ->
         {
             System.out.println(i + "\n");
+        });
+
+        HashMap<String, String> listMembers = HTMLparser.getMembers();
+
+        listMembers.forEach((String member, String team) ->
+        {
+            System.out.println(member + " | " + team + "\n");
         });
 
     }

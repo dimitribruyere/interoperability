@@ -7,9 +7,12 @@ package fr.ptdq.interoperability.HTMLparser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
@@ -22,7 +25,7 @@ public class HTMLparser
      * @param url String
      * @return List<String>
      */
-    static List<String> getTeams()
+    public static List<String> getTeams()
     {
         String url = "https://laboratoirehubertcurien.univ-st-etienne.fr/en/teams.html";
         List<String> teamList = new ArrayList<>();
@@ -52,7 +55,7 @@ public class HTMLparser
      *
      * @return List<String>
      */
-    private static List<String> getMember()
+    public static HashMap<String, String> getMembers()
     {
 
         String listUrl[] =
@@ -65,32 +68,55 @@ public class HTMLparser
             "https://laboratoirehubertcurien.univ-st-etienne.fr/en/teams/secure-embedded-systems-hardware-architectures/staff.html"
         };
 
-        List<String> teamList = new ArrayList<>();
+        HashMap<String, String> memberList = new LinkedHashMap<String, String>();
 
         for (int j = 0; j <listUrl.length; j++)
         {
             String url = listUrl[j];
             try
             {
+                String team ="";
+                switch (j)
+                {
+                    case 0 :
+                        team = "Micro & Nano Structuring";
+                        break;
+                    case 1 :
+                        team = "Radiation-Matter Interaction";
+                        break;
+                    case 2 :
+                        team = "Image Science & Computer Vision";
+                        break;
+                    case 3 :
+                        team = "Data Intelligence";
+                        break;
+                    case 4 :
+                        team = "Connected Intelligence";
+                        break;
+                    case 5 :
+                        team = "Secure Embedded Systems Hardware Architectures";
+                        break;
+                }
+                
                 Document doc = Jsoup.connect(url).get();
 
-//                Elements members = doc.select(".simple");
-//                for (int i = 0; i < members.size(); i++)
-//                {
-//                    String team = members.get(i).select("strong").text();
-//
-//                    team = team.split("[(]")[0];
-//
-//                    teamList.add(team);
-//                }
-                return teamList;
+                Elements membersContent = doc.select(".ametys-cms-content");
+                Element members = membersContent.select("ul").get(0);
+                
+                for (int i = 0; i<members.childNodeSize(); i++)
+                { 
+                    String member = members.select("li").get(i).text();
+                
+                    memberList.put(member, team);
+                }
+                
+
             } catch (IOException e)
             {
                 System.err.println("La recherche avec cet URL n'a rien trouvé");
             }
-            return null;
         }
-        return null;
+        return memberList;
     }
 
 }
