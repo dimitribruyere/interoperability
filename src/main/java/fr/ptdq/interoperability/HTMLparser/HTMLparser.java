@@ -118,5 +118,32 @@ public class HTMLparser
         }
         return memberList;
     }
+    
+    public static HashMap<String, String> getPubli()
+    {
+        HashMap<String, String> publis = new LinkedHashMap<>();
+        
+        String url = "https://dossier.univ-st-etienne.fr/ltsi/www/LabMetry/publi_labo_chronological_All.html";
+        try
+        {
+            Document doc = Jsoup.connect(url).get();
 
+            Elements publiSet = doc.getElementsByTag("li");
+            
+            for (int i = 0; i < publiSet.size(); i++)
+            {
+                String title = publiSet.get(i).getElementsByTag("a").text();
+                String bordel = publiSet.get(i).text();
+                
+                publis.put(title, bordel);
+
+            }
+            return publis;
+        } catch (IOException e)
+        {
+            System.err.println("La recherche avec cet URL n'a rien trouvé");
+        }
+        return null;
+        
+    }
 }

@@ -20,17 +20,18 @@ public class TestParser
     {
         List<String> listTeam = HTMLparser.getTeams();
 
-        listTeam.forEach(i ->
-        {
-            System.out.println(i + "\n");
-        });
+//        listTeam.forEach(i ->
+//        {
+//            System.out.println(i + "\n");
+//        });
+//
+//        HashMap<String, String> listMembers = HTMLparser.getMembers();
+//
+//        listMembers.forEach((String member, String team) ->
+//        {
+//            System.out.println(member + " | " + team + "\n");
+//        });
 
-        HashMap<String, String> listMembers = HTMLparser.getMembers();
-
-        listMembers.forEach((String member, String team) ->
-        {
-            System.out.println(member + " | " + team + "\n");
-        });
-
+        HTMLparser.getPubli();
     }
 }
