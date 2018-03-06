@@ -33,7 +33,7 @@ public class TestJWBF
                 .build();
         
         MediaWikiBot wikiBot = new MediaWikiBot("https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/");
-        wikiBot.login("ChristopherJEAMME", "D2rZ9Fk1Sg3K");
+        wikiBot.login("user", "pass");
         //SimpleArticle article = wikiBot.readData("Main_Page");
         //System.out.println(wikiBot.getWikiType());
 
