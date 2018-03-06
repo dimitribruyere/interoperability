@@ -43,7 +43,8 @@ public class HTMLparser
                 teamList.add(team);
             }
             return teamList;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             System.err.println("La recherche avec cet URL n'a rien trouvé");
         }
