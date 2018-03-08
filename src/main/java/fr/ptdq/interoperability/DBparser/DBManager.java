@@ -1,4 +1,5 @@
 package fr.ptdq.interoperability.DBparser;
+
 import java.sql.*;
 
 public class DBManager
@@ -6,15 +7,19 @@ public class DBManager
 
     /**
      * Connect to database
+     *
      * @return the Connection object
      */
-    public static Connection connect() {
+    public static Connection connect()
+    {
         // SQLite connection string
         String url = "jdbc:sqlite:src/main/java/fr/ptdq/interoperability/DBparser/inter";
         Connection conn = null;
-        try {
+        try
+        {
             conn = DriverManager.getConnection(url);
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             System.out.println(e.getMessage());
         }
 
@@ -23,17 +28,18 @@ public class DBManager
 
     /**
      * Send a request to SQLite database
+     *
      * @param request SQL request
      */
-    public static ResultSet executeQuery(Connection conn, String request){
-        String sql = "SELECT id, name, capacity "
-                + "FROM warehouses WHERE capacity > ?";
-
-        try {
-            Statement statement  = conn.createStatement();
+    public static ResultSet executeQuery(Connection conn, String request)
+    {
+        try
+        {
+            Statement statement = conn.createStatement();
             return statement.executeQuery(request);
 
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             System.out.println(e.getMessage());
         }
         return null;
@@ -57,8 +63,7 @@ public class DBManager
                 }
                 System.out.println("");
             }
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             ex.printStackTrace();
         }
@@ -68,8 +73,8 @@ public class DBManager
     {
         Connection conn = connect();
 
-        if(conn != null)
-            System.out.println("Conn ok");
+        if (conn != null)
+            System.out.println("Connection to DB : Success.");
 
         ResultSet rs = executeQuery(conn, "SELECT * FROM Personne");
 
