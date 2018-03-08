@@ -1,55 +1,79 @@
 package fr.ptdq.interoperability.DBparser;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DBManager
 {
-    public static Connection createMysqlDatabase(Connection factice, String user,
-                                                 String pass, String nomBase)
-            throws SQLException
+
+    /**
+     * Connect to database
+     * @return the Connection object
+     */
+    public static Connection connect() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:src/main/java/fr/ptdq/interoperability/DBparser/inter";
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return conn;
+    }
+
+    /**
+     * Send a request to SQLite database
+     * @param request SQL request
+     */
+    public static ResultSet executeQuery(Connection conn, String request){
+        String sql = "SELECT id, name, capacity "
+                + "FROM warehouses WHERE capacity > ?";
+
+        try {
+            Statement statement  = conn.createStatement();
+            return statement.executeQuery(request);
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+    public static void displayResultSet(ResultSet rs)
     {
-        Connection connection = null;
-        Statement statement = null;
+        // loop through the result set
         try
         {
-            statement = factice.createStatement();
-            statement.execute("CREATE DATABASE " + nomBase);
-            String url = factice.getMetaData().getURL();
-            url = url.substring(0, url.lastIndexOf("/"));
-            url += "/" + nomBase;
-            connection = DriverManager.getConnection(url, user, pass);
-        } catch (SQLException e)
-        {
-            SQLException sqle = new SQLException("Création de la base impossible");
-            sqle.setNextException(e);
-            throw sqle;
-        } finally
-        {
-            try
+            ResultSetMetaData rsmd = rs.getMetaData();
+            System.out.println("querying SELECT * FROM XXX");
+            int columnsNumber = rsmd.getColumnCount();
+            while (rs.next())
             {
-                statement.close();
-            } catch (Exception e)
-            {
+                for (int i = 1; i <= columnsNumber; i++)
+                {
+                    if (i > 1) System.out.print(",  ");
+                    String columnValue = rs.getString(i);
+                    System.out.print(columnValue + " " + rsmd.getColumnName(i));
+                }
+                System.out.println("");
             }
         }
-        return connection;
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     public static void main(String[] args) throws Exception
     {
-        Class.forName("com.mysql.jdbc.Driver");
-        String url = "jdbc:mysql://host/baseLien";
-        String user = "user";
-        String pass = "password";
-// on commence par se connecter à la base factice
-        Connection factice = DriverManager.getConnection(url,user,pass);
-// on crée la base et on récupère une Connection
-        Connection connection = createMysqlDatabase(factice,user,pass,"NouvelleBase");
-// on peut finalement fermer notre Connection factice qui ne nous sert plus à rien
-        factice.close();
+        Connection conn = connect();
+
+        if(conn != null)
+            System.out.println("Conn ok");
+
+        ResultSet rs = executeQuery(conn, "SELECT * FROM Personne");
+
+        displayResultSet(rs);
     }
 
 
