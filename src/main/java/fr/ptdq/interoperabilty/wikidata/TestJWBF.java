@@ -73,7 +73,7 @@ public class TestJWBF
         httpcon.setRequestProperty("Accept", "application/json");
         httpcon.setRequestMethod("POST");
         httpcon.connect();
-        byte[] outputBytes = "query=wife of Barack Obama&lang=en&kb=dbpedia".getBytes("UTF-8");
+        byte[] outputBytes = "query=pierre Maret university&lang=en&kb=wikidata".getBytes("UTF-8");
         OutputStream os = httpcon.getOutputStream();
         os.write(outputBytes);
         os.close();
@@ -90,7 +90,7 @@ public class TestJWBF
         JSONObject queryResponse = new JSONObject(response);
 
         System.out.println("REPONSE REQUETE=" + response.toString());
-        System.out.println("REPONSE REQUETE=" + queryResponse.toString(2));
+        //System.out.println("REPONSE REQUETE=" + queryResponse.toString(2));
 
         //TESTS
 //        System.out.println("SUMMARY="+article.getEditSummary());
