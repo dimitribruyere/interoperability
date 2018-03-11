@@ -82,47 +82,6 @@
             <version>1.10.2</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>org.apache.maven.reporting</groupId>
-            <artifactId>maven-reporting-exec</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.reporting</groupId>
-            <artifactId>maven-reporting-exec</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.vaadin.external.google</groupId>
-            <artifactId>android-json</artifactId>
-            <version>0.0.20131108.vaadin1</version>
-        </dependency>
-
-
-
-        <dependency>
-            <groupId>org.wikidata.wdtk</groupId>
-            <artifactId>wdtk-datamodel</artifactId>
-            <version>0.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wikidata.wdtk</groupId>
-            <artifactId>wdtk-dumpfiles</artifactId>
-            <version>0.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wikidata.wdtk</groupId>
-            <artifactId>wdtk-rdf</artifactId>
-            <version>0.8.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.wikidata.wdtk</groupId>
-            <artifactId>wdtk-wikibaseapi</artifactId>
-            <version>0.8.0</version>
-        </dependency>
-
-
-
     </dependencies>
     <build>
         <plugins>
