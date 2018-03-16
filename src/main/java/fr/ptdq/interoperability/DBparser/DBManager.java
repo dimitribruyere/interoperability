@@ -87,23 +87,18 @@ public class DBManager
     public static void main(String[] args) throws Exception
     {
 
-
-        /**
-         * Personne     P
-         * Nom          P
-         * Prénom       P
-         * Fonction     P258
-         * Adresse      P257
-         * Equipe de recherche  P289
-         * Membre de    P292
-         *
-         */
         Connection conn = connect();
 
         if (conn != null)
             System.out.println("Connection to DB : Success.");
 
-        registerPersons(conn);
+        //registerTeams(conn);
+        //registerPersons(conn);
+
+        for(int i = 1; i < 7 ; i++)
+        {
+            registerTeamMembers(conn, i);
+        }
 
 
     }
@@ -195,4 +190,65 @@ public class DBManager
 
     }
 
+    public static void registerTeams(Connection conn) throws Exception
+    {
+        String siteIri = "https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/";
+        ArrayList<String> listTeam = new ArrayList<>();
+        ResultSet rs = executeQuery(conn,"SELECT nom FROM Equipe_Recherche");
+
+        try
+        {
+
+            while (rs.next())
+            {
+
+                    listTeam.add(rs.getString(1));
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        for(String s : listTeam)
+        {
+            System.out.println(s);
+        }
+
+        /*** WIKI DATA ***/
+
+        // TODO : add to wikidata when ID pb will be adressed
+    }
+
+    public static void registerTeamMembers(Connection conn, int teamID) throws Exception
+    {
+        String siteIri = "https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/";
+        ArrayList<String> listPers = new ArrayList<>();
+        ResultSet rs = executeQuery(conn,"SELECT nom, prenom FROM Personne, Membre_Equipe_Recherche WHERE Personne.id = Membre_Equipe_Recherche.id_personne AND Membre_Equipe_Recherche.id_equipe_recherche = " + teamID);
+
+        try
+        {
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+
+            while (rs.next())
+            {
+                String pers = new String("");
+                for (int i = 1; i <= columnsNumber; i++)
+                {
+                    if (i > 1) pers += "/";
+                    pers += rs.getString(i);
+                }
+                listPers.add(pers);
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        for(String s : listPers)
+        {
+            System.out.println("Team "+ teamID + " : " + s);
+        }
+    }
 }
