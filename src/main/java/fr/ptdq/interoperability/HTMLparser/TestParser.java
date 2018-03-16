@@ -18,8 +18,8 @@ public class TestParser
 
     public static void main(String[] args)
     {
-        List<String> listTeam = HTMLparser.getTeams();
-
+//        List<String> listTeam = HTMLparser.getTeams();
+//
 //        listTeam.forEach(i ->
 //        {
 //            System.out.println(i + "\n");
@@ -32,6 +32,18 @@ public class TestParser
 //            System.out.println(member + " | " + team + "\n");
 //        });
 
-        HTMLparser.getPubli();
+        HashMap<String,String> listPublis = HTMLparser.getPubli();
+        
+//        listPublis.forEach((i,j) -> 
+//        {
+//            System.out.println(i);
+//            System.out.println(j);
+//            System.out.println();
+//        });
+
+        List<Publications> lala = HTMLparser.getInfosFromPublis(listPublis);
+        
+        System.out.println(lala);
+        
     }
 }
