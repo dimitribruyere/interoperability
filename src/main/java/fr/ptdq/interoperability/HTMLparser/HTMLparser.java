@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,8 +45,7 @@ public class HTMLparser
                 teamList.add(team);
             }
             return teamList;
-        }
-        catch (IOException e)
+        } catch (IOException e)
         {
             System.err.println("La recherche avec cet URL n'a rien trouvé");
         }
@@ -71,46 +72,45 @@ public class HTMLparser
 
         HashMap<String, String> memberList = new LinkedHashMap<String, String>();
 
-        for (int j = 0; j <listUrl.length; j++)
+        for (int j = 0; j < listUrl.length; j++)
         {
             String url = listUrl[j];
             try
             {
-                String team ="";
+                String team = "";
                 switch (j)
                 {
-                    case 0 :
+                    case 0:
                         team = "Micro & Nano Structuring";
                         break;
-                    case 1 :
+                    case 1:
                         team = "Radiation-Matter Interaction";
                         break;
-                    case 2 :
+                    case 2:
                         team = "Image Science & Computer Vision";
                         break;
-                    case 3 :
+                    case 3:
                         team = "Data Intelligence";
                         break;
-                    case 4 :
+                    case 4:
                         team = "Connected Intelligence";
                         break;
-                    case 5 :
+                    case 5:
                         team = "Secure Embedded Systems Hardware Architectures";
                         break;
                 }
-                
+
                 Document doc = Jsoup.connect(url).get();
 
                 Elements membersContent = doc.select(".ametys-cms-content");
                 Element members = membersContent.select("ul").get(0);
-                
-                for (int i = 0; i<members.childNodeSize(); i++)
-                { 
+
+                for (int i = 0; i < members.childNodeSize(); i++)
+                {
                     String member = members.select("li").get(i).text();
-                
+
                     memberList.put(member, team);
                 }
-                
 
             } catch (IOException e)
             {
@@ -119,23 +119,23 @@ public class HTMLparser
         }
         return memberList;
     }
-    
+
     public static HashMap<String, String> getPubli()
     {
         HashMap<String, String> publis = new LinkedHashMap<>();
-        
+
         String url = "https://dossier.univ-st-etienne.fr/ltsi/www/LabMetry/publi_labo_chronological_All.html";
         try
         {
             Document doc = Jsoup.connect(url).get();
 
             Elements publiSet = doc.getElementsByTag("li");
-            
+
             for (int i = 0; i < publiSet.size(); i++)
             {
                 String title = publiSet.get(i).getElementsByTag("a").text();
                 String bordel = publiSet.get(i).text();
-                
+
                 publis.put(title, bordel);
 
             }
@@ -145,6 +145,49 @@ public class HTMLparser
             System.err.println("La recherche avec cet URL n'a rien trouvé");
         }
         return null;
-        
+
+    }
+
+    public static List<Publications> getInfosFromPublis(HashMap<String, String> publis)
+    {
+        List<Publications> list = new ArrayList<>();
+
+        publis.forEach((title, allText) ->
+        {
+            try
+            {
+                String date ="";
+                List<String> authors = new ArrayList<>();
+                
+                
+                String bordel[] = allText.split("] ");
+                Pattern pattern = Pattern.compile("(2[0-9]{3})");
+                Matcher matcher = pattern.matcher(bordel[0]);
+                while (matcher.find())
+                {
+                    date = matcher.group();
+                }
+                
+                
+                String bordel2[] = bordel[1].split(", ");
+                for (int i=0; i<bordel2.length; i++)
+                {
+                    pattern = Pattern.compile("[A-Z]\\.\\s[A-Z]");
+                    matcher = pattern.matcher(bordel2[i]);
+                    while(matcher.find())
+                    {
+                        authors.add(bordel2[i]);
+                    }
+                }
+
+                list.add(new Publications(title, date, authors));
+                
+            } catch (Exception e)
+            {
+                System.err.println("Problem with a publication analysis");
+            }
+        });
+
+        return list;
     }
 }
