@@ -12,6 +12,8 @@ import org.wikidata.wdtk.wikibaseapi.LoginFailedException;
 import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Main {
@@ -56,11 +58,13 @@ public class Main {
                 .withLabel("Florence Garrelie", "en")
                 .withLabel("Florence Garrelie", "fr")
                 .withStatement(statement1).build();
-        try {
+        try
+        {
             ItemDocument newItemDocument = wbde.createItemDocument(itemDocument,
-                    "Statement created by our bot");
-        } catch (IOException e) {
-            e.printStackTrace();
+                "Statement created by our bot");
+        } catch (IOException ex)
+        {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Created Florence Garrelie");
         System.out.println("Created statement: Florence Garrelie travaille Laboratoire Huber Curien");
