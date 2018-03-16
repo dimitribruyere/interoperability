@@ -92,12 +92,14 @@ public class DBManager
         if (conn != null)
             System.out.println("Connection to DB : Success.");
 
+
+        getPersonne(conn, "Alata", "O");
         //registerTeams(conn);
         //registerPersons(conn);
 
         for(int i = 1; i < 7 ; i++)
         {
-            registerTeamMembers(conn, i);
+          //  registerTeamMembers(conn, i);
         }
 
 
@@ -158,8 +160,10 @@ public class DBManager
         PropertyDocument propertyPrenom = (PropertyDocument) wbdf.getEntityDocument(PropertyIDs.Prenom);
 
         ItemIdValue itemPersonnelID = personnelHC.getItemId();
+
         System.out.println("ItemIdValue = " + itemPersonnelID);
         String[] sub;
+
 
         for(int i = 0 ; i < listPers.size() ; i++)
         {
@@ -251,4 +255,39 @@ public class DBManager
             System.out.println("Team "+ teamID + " : " + s);
         }
     }
+
+    public static ArrayList<String> getPersonne(Connection conn, String nom, String prenom /* partial */)
+    {
+        ArrayList<String> result = new ArrayList<>();
+
+        ResultSet rs = executeQuery(conn,"SELECT nom, prenom FROM Personne WHERE nom LIKE '" + nom + "' AND prenom LIKE '" + prenom +"%'");
+
+        try
+        {
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columnsNumber = rsmd.getColumnCount();
+
+            while (rs.next())
+            {
+                String pers = new String("");
+                for (int i = 1; i <= columnsNumber; i++)
+                {
+                    if (i > 1) pers = " " + pers;
+                    pers = rs.getString(i) + pers;
+                }
+                result.add(pers);
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        for(String s : result)
+        {
+            System.out.println(s);
+        }
+
+        return result;
+    }
 }
+
