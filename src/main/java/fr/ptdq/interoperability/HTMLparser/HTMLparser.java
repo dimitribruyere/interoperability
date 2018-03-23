@@ -5,6 +5,8 @@
  */
 package fr.ptdq.interoperability.HTMLparser;
 
+import fr.ptdq.interoperability.DBparser.DBManager;
+import static fr.ptdq.interoperability.DBparser.DBManager.getPersonne;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -158,29 +160,42 @@ public class HTMLparser
             {
                 String date ="";
                 List<String> authors = new ArrayList<>();
+                List<String> contributors = new ArrayList<>();
                 
                 
-                String bordel[] = allText.split("] ");
+                String[] splitage = allText.split("] ");
                 Pattern pattern = Pattern.compile("(2[0-9]{3})");
-                Matcher matcher = pattern.matcher(bordel[0]);
+                Matcher matcher = pattern.matcher(splitage[0]);
                 while (matcher.find())
                 {
                     date = matcher.group();
                 }
                 
                 
-                String bordel2[] = bordel[1].split(", ");
-                for (int i=0; i<bordel2.length; i++)
+                String[] authorsList = splitage[1].split(", ");
+                for (int i=0; i<authorsList.length; i++)
                 {
                     pattern = Pattern.compile("[A-Z]\\.\\s[A-Z]");
-                    matcher = pattern.matcher(bordel2[i]);
+                    matcher = pattern.matcher(authorsList[i]);
                     while(matcher.find())
                     {
-                        authors.add(bordel2[i]);
+                        String[] name = authorsList[i].split(". ");
+                        String firstNameLetter = name[0];
+                        String lastName = name[1];
+                        try
+                        {
+                            String author = getPersonne(DBManager.connect(), lastName, firstNameLetter).get(0);
+                            authors.add(author);
+                        }
+                        catch (Exception e)
+                        {
+                            String contributor = authorsList[i];
+                            contributors.add(contributor);
+                        }
                     }
                 }
 
-                list.add(new Publications(title, date, authors));
+                list.add(new Publications(title, date, authors, contributors));
                 
             } catch (Exception e)
             {
