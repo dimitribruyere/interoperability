@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -80,7 +81,7 @@ public class CSVparser {
             int i = 0;
             while ((line = br.readLine()) != null)
             {
-                if (i == 2)
+                if (i != 0)
                 {
                     String[] stage = line.split(";");
                    
@@ -123,11 +124,11 @@ public class CSVparser {
                                .withValue(Datamodel.makeStringValue("18 Rue Professeur Benoît Lauras, 42000 Saint-Étienne")).build();
                     org.wikidata.wdtk.datamodel.interfaces.Statement statement4 = StatementBuilder
                                .forSubjectAndProperty(itemStageID, Duree.getPropertyId())
-                               .withValue(Datamodel.makeStringValue(duree)).build();
+                               .withValue(Datamodel.makeQuantityValue(BigDecimal.valueOf(Integer.parseInt(duree)))).build();
 
                     org.wikidata.wdtk.datamodel.interfaces.Statement statement5 = StatementBuilder
                                .forSubjectAndProperty(itemStageID, Gratification.getPropertyId())
-                               .withValue(Datamodel.makeStringValue(gratification)).build();
+                               .withValue(Datamodel.makeQuantityValue(BigDecimal.valueOf(3.75))).build();
                     org.wikidata.wdtk.datamodel.interfaces.Statement statement6 = StatementBuilder
                                .forSubjectAndProperty(itemStageID, Description.getPropertyId())
                                .withValue(Datamodel.makeStringValue(desc)).build();
@@ -144,7 +145,7 @@ public class CSVparser {
                                .withValue(Datamodel.makeStringValue(titre))             
                                .withValue(Datamodel.makeStringValue(titre));
 
-                    
+                   
                     for (int j = 0; j < compt.length; j++)
                     {
                         builder.withValue(Datamodel.makeStringValue(compt[j]));
