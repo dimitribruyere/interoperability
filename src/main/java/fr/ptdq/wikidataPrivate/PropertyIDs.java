@@ -12,7 +12,7 @@ public class PropertyIDs
     public static String Membre  =   "P292";
     public static String Publication = "Q941";    
     public static String Auteur = "P298";
-    public static String année = "P167";
+    public static String AnneePubli = "P167";
 
 
 }
