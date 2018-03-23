@@ -24,9 +24,23 @@ public class Query
 
     public static void main(String[] args)
     {
-        JSONObject json = query("pierre maret sex");
+        JSONObject json = query("Nom Pierre Maret");
+        System.out.println(valueOfResponse(json));
+    }
 
-        System.out.println("REPONSE REQUETE=" + json.toString(2));
+    public static String valueOfResponse(JSONObject json)
+    {
+        String value = new JSONObject(json
+                .optJSONArray("questions")
+                .optJSONObject(0)
+                .optJSONObject("question")
+                .getString("answers"))
+                .optJSONObject("results")
+                .optJSONArray("bindings")
+                .optJSONObject(0)
+                .optJSONObject("o1")
+                .optString("value");
+        return value;
     }
 
     public static JSONObject query(String query)
@@ -39,7 +53,7 @@ public class Query
             httpcon.setRequestProperty("Accept", "application/json");
             httpcon.setRequestMethod("POST");
             httpcon.connect();
-            String toSend = "query=" + query + "&lang=fr&kb=wikidata";
+            String toSend = "query=" + query + "&lang=en&kb=student";
             byte[] outputBytes = toSend.getBytes("UTF-8");
             try (OutputStream os = httpcon.getOutputStream())
             {
