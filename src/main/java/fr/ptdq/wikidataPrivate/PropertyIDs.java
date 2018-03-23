@@ -24,7 +24,6 @@ public class PropertyIDs
     public static String EquipeSecure  = "Q1232";
     public static String EquipeConnected  = "Q1231";
 
-
     public static String année = "P167";
     public static String Stage = "Q924";
     public static String Gratification = "P282";
