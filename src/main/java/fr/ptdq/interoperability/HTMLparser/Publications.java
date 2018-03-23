@@ -34,6 +34,7 @@ public class Publications
     public String toString()
     {
         String output="\n";
+        //output+=date+"\n";
         output+="Titre : "+this.title+" ("+this.date+")\n";
         output+=this.authors+"\n";
         return output;
