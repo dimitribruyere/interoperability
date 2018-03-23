@@ -14,6 +14,16 @@ public class PropertyIDs
     public static String Publication = "Q941";    
     public static String Auteur = "P298";
     public static String année = "P167";
-
+    public static String Stage = "Q924";
+    public static String Gratification = "P282";
+    public static String Proposepar = "P295";
+    public static String Competence = "P260";
+    public static String Description = "P245";
+    public static String Intitule = "P233";
+    public static String Duree = "P294";
+    
+    
+    
+  
 
 }
