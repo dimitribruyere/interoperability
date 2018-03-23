@@ -1,5 +1,6 @@
 package fr.ptdq.interoperability.DBparser;
 
+import fr.ptdq.wikidataPrivate.Main;
 import fr.ptdq.wikidataPrivate.PropertyIDs;
 import org.wikidata.wdtk.datamodel.helpers.Datamodel;
 import org.wikidata.wdtk.datamodel.helpers.ItemDocumentBuilder;
@@ -17,6 +18,8 @@ import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBManager
 {
@@ -93,9 +96,9 @@ public class DBManager
             System.out.println("Connection to DB : Success.");
 
 
-        getPersonne(conn, "Alata", "O");
+        //getPersonne(conn, "Alata", "O");
         //registerTeams(conn);
-        //registerPersons(conn);
+        registerPersons(conn);
 
         for(int i = 1; i < 7 ; i++)
         {
@@ -118,6 +121,7 @@ public class DBManager
 
             while (rs.next())
             {
+                /* For all entries */
                 String pers = new String("");
                 for (int i = 1; i <= columnsNumber; i++)
                 {
@@ -156,31 +160,36 @@ public class DBManager
         ItemDocument personnelHC = (ItemDocument) wbdf.getEntityDocument(PropertyIDs.Personne);
 
         WikibaseDataEditor wbde = new WikibaseDataEditor(con, siteIri);
-        PropertyDocument propertyNom = (PropertyDocument) wbdf.getEntityDocument(PropertyIDs.Nom);
-        PropertyDocument propertyPrenom = (PropertyDocument) wbdf.getEntityDocument(PropertyIDs.Prenom);
 
-        ItemIdValue itemPersonnelID = personnelHC.getItemId();
+        PropertyDocument propertyInstanceDe = (PropertyDocument) wbdf.getEntityDocument(PropertyIDs.InstanceDe);
+        PropertyDocument propertyMembre = (PropertyDocument) wbdf.getEntityDocument(PropertyIDs.Membre);
 
-        System.out.println("ItemIdValue = " + itemPersonnelID);
+        //  PropertyDocument propertyPrenom = (PropertyDocument) wbdf.getEntityDocument(PropertyIDs.Prenom);
+
+        ItemIdValue itemPersonnelID = ItemIdValue.NULL; //personnelHC.getItemId();
+
+       // System.out.println("ItemIdValue = " + itemPersonnelID);
         String[] sub;
 
 
-        for(int i = 0 ; i < listPers.size() ; i++)
+
+        for(int i = 1 ; i < listPers.size() ; i++)
         {
             sub = listPers.get(i).split("/"); // 0 = nom, 1 = prenom
             System.out.println("ADDING [nom = " + sub[0] + " prenom = " + sub[1] + "]");
             org.wikidata.wdtk.datamodel.interfaces.Statement statement1 = StatementBuilder
-                    .forSubjectAndProperty(itemPersonnelID, propertyNom.getPropertyId())
-                    .withValue(Datamodel.makeStringValue(sub[0])).build();
+                    .forSubjectAndProperty(itemPersonnelID, propertyInstanceDe.getPropertyId())
+                    .withValue(personnelHC.getItemId()).build();
+
             org.wikidata.wdtk.datamodel.interfaces.Statement statement2 = StatementBuilder
-                    .forSubjectAndProperty(itemPersonnelID, propertyPrenom.getPropertyId())
-                    .withValue(Datamodel.makeStringValue(sub[1])).build();
+                    .forSubjectAndProperty(itemPersonnelID, propertyInstanceDe.getPropertyId())
+                    .withValue(personnelHC.getItemId()).build();
+
 
             ItemDocument itemDocument = ItemDocumentBuilder.forItemId(itemPersonnelID)
-                    .withLabel(sub[1] + " " + sub[0], "en")
+                   // .withLabel(sub[1] + " " + sub[0], "en")
                     .withLabel(sub[1] + " " + sub[0], "fr")
-                    .withStatement(statement1)
-                    .withStatement(statement2).build();
+                    .withStatement(statement1).build();
 
             try
             {
