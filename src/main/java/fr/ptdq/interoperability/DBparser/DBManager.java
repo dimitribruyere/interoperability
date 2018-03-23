@@ -75,7 +75,10 @@ public class DBManager
             {
                 for (int i = 1; i <= columnsNumber; i++)
                 {
-                    if (i > 1) System.out.print("\t");
+                    if (i > 1)
+                    {
+                        System.out.print("\t");
+                    }
                     String columnValue = rs.getString(i);
                     System.out.print("[" + rsmd.getColumnName(i) + "]" + columnValue);
                 }
@@ -93,18 +96,18 @@ public class DBManager
         Connection conn = connect();
 
         if (conn != null)
-            System.out.println("Connection to DB : Success.");
-
-
-        //getPersonne(conn, "Alata", "O");
-        //registerTeams(conn);
-        registerPersons(conn);
-
-        for(int i = 1; i < 7 ; i++)
         {
-          //  registerTeamMembers(conn, i);
+            System.out.println("Connection to DB : Success.");
         }
 
+        getPersonne(conn, "Alata", "O");
+        //registerTeams(conn);
+        //registerPersons(conn);
+
+        for (int i = 1; i < 7; i++)
+        {
+            //  registerTeamMembers(conn, i);
+        }
 
     }
 
@@ -112,7 +115,7 @@ public class DBManager
     {
         String siteIri = "https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/";
         ArrayList<String> listPers = new ArrayList<>();
-        ResultSet rs = executeQuery(conn,"SELECT nom, prenom FROM Personne");
+        ResultSet rs = executeQuery(conn, "SELECT nom, prenom FROM Personne");
 
         try
         {
@@ -125,7 +128,10 @@ public class DBManager
                 String pers = new String("");
                 for (int i = 1; i <= columnsNumber; i++)
                 {
-                    if (i > 1) pers += "/";
+                    if (i > 1)
+                    {
+                        pers += "/";
+                    }
                     pers += rs.getString(i);
                 }
                 listPers.add(pers);
@@ -135,22 +141,25 @@ public class DBManager
             ex.printStackTrace();
         }
 
-        for(String s : listPers)
+        for (String s : listPers)
         {
             System.out.println(s);
         }
 
-        /*** WIKI DATA ***/
-
+        /**
+         * * WIKI DATA **
+         */
         WebResourceFetcherImpl.setUserAgent("Wikidata Toolkit EditOnlineDataExample");
 
         ApiConnection con = new ApiConnection("https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/api.php");
 
-        try {
+        try
+        {
             //Put in the first place the user with which you created the bot account
             //Put as password what you get when you create the bot account
             con.login("Root@SamBot", "tcr0kgob5hgjejp2rrga8kocjq3jfc0l");
-        } catch (LoginFailedException e) {
+        } catch (LoginFailedException e)
+        {
             e.printStackTrace();
         }
 
@@ -165,36 +174,32 @@ public class DBManager
         PropertyDocument propertyMembre = (PropertyDocument) wbdf.getEntityDocument(PropertyIDs.Membre);
 
         //  PropertyDocument propertyPrenom = (PropertyDocument) wbdf.getEntityDocument(PropertyIDs.Prenom);
-
         ItemIdValue itemPersonnelID = ItemIdValue.NULL; //personnelHC.getItemId();
 
-       // System.out.println("ItemIdValue = " + itemPersonnelID);
+        // System.out.println("ItemIdValue = " + itemPersonnelID);
         String[] sub;
 
-
-
-        for(int i = 1 ; i < listPers.size() ; i++)
+        for (int i = 1; i < listPers.size(); i++)
         {
             sub = listPers.get(i).split("/"); // 0 = nom, 1 = prenom
             System.out.println("ADDING [nom = " + sub[0] + " prenom = " + sub[1] + "]");
             org.wikidata.wdtk.datamodel.interfaces.Statement statement1 = StatementBuilder
-                    .forSubjectAndProperty(itemPersonnelID, propertyInstanceDe.getPropertyId())
-                    .withValue(personnelHC.getItemId()).build();
+                .forSubjectAndProperty(itemPersonnelID, propertyInstanceDe.getPropertyId())
+                .withValue(personnelHC.getItemId()).build();
 
             org.wikidata.wdtk.datamodel.interfaces.Statement statement2 = StatementBuilder
-                    .forSubjectAndProperty(itemPersonnelID, propertyInstanceDe.getPropertyId())
-                    .withValue(personnelHC.getItemId()).build();
-
+                .forSubjectAndProperty(itemPersonnelID, propertyInstanceDe.getPropertyId())
+                .withValue(personnelHC.getItemId()).build();
 
             ItemDocument itemDocument = ItemDocumentBuilder.forItemId(itemPersonnelID)
-                   // .withLabel(sub[1] + " " + sub[0], "en")
-                    .withLabel(sub[1] + " " + sub[0], "fr")
-                    .withStatement(statement1).build();
+                // .withLabel(sub[1] + " " + sub[0], "en")
+                .withLabel(sub[1] + " " + sub[0], "fr")
+                .withStatement(statement1).build();
 
             try
             {
                 ItemDocument newItemDocument = wbde.createItemDocument(itemDocument,
-                                                                       "Personnel du Laboratoire Hubert Curien.");
+                    "Personnel du Laboratoire Hubert Curien.");
             } catch (IOException e)
             {
                 e.printStackTrace();
@@ -207,7 +212,7 @@ public class DBManager
     {
         String siteIri = "https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/";
         ArrayList<String> listTeam = new ArrayList<>();
-        ResultSet rs = executeQuery(conn,"SELECT nom FROM Equipe_Recherche");
+        ResultSet rs = executeQuery(conn, "SELECT nom FROM Equipe_Recherche");
 
         try
         {
@@ -215,20 +220,21 @@ public class DBManager
             while (rs.next())
             {
 
-                    listTeam.add(rs.getString(1));
+                listTeam.add(rs.getString(1));
             }
         } catch (Exception ex)
         {
             ex.printStackTrace();
         }
 
-        for(String s : listTeam)
+        for (String s : listTeam)
         {
             System.out.println(s);
         }
 
-        /*** WIKI DATA ***/
-
+        /**
+         * * WIKI DATA **
+         */
         // TODO : add to wikidata when ID pb will be adressed
     }
 
@@ -236,7 +242,7 @@ public class DBManager
     {
         String siteIri = "https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/";
         ArrayList<String> listPers = new ArrayList<>();
-        ResultSet rs = executeQuery(conn,"SELECT nom, prenom FROM Personne, Membre_Equipe_Recherche WHERE Personne.id = Membre_Equipe_Recherche.id_personne AND Membre_Equipe_Recherche.id_equipe_recherche = " + teamID);
+        ResultSet rs = executeQuery(conn, "SELECT nom, prenom FROM Personne, Membre_Equipe_Recherche WHERE Personne.id = Membre_Equipe_Recherche.id_personne AND Membre_Equipe_Recherche.id_equipe_recherche = " + teamID);
 
         try
         {
@@ -249,7 +255,10 @@ public class DBManager
                 String pers = new String("");
                 for (int i = 1; i <= columnsNumber; i++)
                 {
-                    if (i > 1) pers += "/";
+                    if (i > 1)
+                    {
+                        pers += "/";
+                    }
                     pers += rs.getString(i);
                 }
                 listPers.add(pers);
@@ -259,9 +268,9 @@ public class DBManager
             ex.printStackTrace();
         }
 
-        for(String s : listPers)
+        for (String s : listPers)
         {
-            System.out.println("Team "+ teamID + " : " + s);
+            System.out.println("Team " + teamID + " : " + s);
         }
     }
 
@@ -269,7 +278,7 @@ public class DBManager
     {
         ArrayList<String> result = new ArrayList<>();
 
-        ResultSet rs = executeQuery(conn,"SELECT nom, prenom FROM Personne WHERE nom LIKE '" + nom + "' AND prenom LIKE '" + prenom +"%'");
+        ResultSet rs = executeQuery(conn, "SELECT nom, prenom FROM Personne WHERE nom LIKE '" + nom + "' AND prenom LIKE '" + prenom + "%'");
 
         try
         {
@@ -281,22 +290,24 @@ public class DBManager
                 String pers = new String("");
                 for (int i = 1; i <= columnsNumber; i++)
                 {
-                    if (i > 1) pers = " " + pers;
+                    if (i > 1)
+                    {
+                        pers = " " + pers;
+                    }
                     pers = rs.getString(i) + pers;
                 }
                 result.add(pers);
             }
         } catch (Exception ex)
         {
-            ex.printStackTrace();
+            //ex.printStackTrace();
         }
 
-        for(String s : result)
-        {
-            System.out.println(s);
-        }
+//        for (String s : result)
+//        {
+//            System.out.println(s);
+//        }
 
         return result;
     }
 }
-
