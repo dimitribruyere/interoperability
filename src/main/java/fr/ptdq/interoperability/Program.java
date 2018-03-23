@@ -5,9 +5,11 @@
  */
 package fr.ptdq.interoperability;
 
+import fr.ptdq.interoperabilty.wikidata.Query;
+import org.json.JSONObject;
+
 /**
  *
- * @author chris
  */
 public class Program
 {
@@ -21,6 +23,8 @@ public class Program
     public static String question(String question)
     {
         System.out.println("Question = " + question);
-        return "Réponse pas encore implémenté.";
+        JSONObject json = Query.query(question);
+        String toDisplay = "Valeur = " + Query.valueOfResponse(json) + "<br />Type = " + Query.typeOfResponse(json) + "<br />Item lié = " + Query.itemOfResponse(json);
+        return toDisplay;
     }
 }
