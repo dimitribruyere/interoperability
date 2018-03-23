@@ -38,7 +38,7 @@ public class CSVparser {
     public static void main(String[] args) 
     {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("src/main/resources/csv/Classeur1.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("src/main/resources/csv/Classeur.csv"));
             String line;
             
             String siteIri = "https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/";
@@ -80,7 +80,7 @@ public class CSVparser {
             int i = 0;
             while ((line = br.readLine()) != null)
             {
-                if (i == 1)
+                if (i == 2)
                 {
                     String[] stage = line.split(";");
                    
