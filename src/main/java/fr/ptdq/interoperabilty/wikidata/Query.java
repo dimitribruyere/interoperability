@@ -26,6 +26,7 @@ public class Query
     {
         JSONObject json = query("Nom Pierre Maret");
         System.out.println(valueOfResponse(json));
+        System.out.println(typeOfResponse(json));
     }
 
     public static String valueOfResponse(JSONObject json)
@@ -40,6 +41,21 @@ public class Query
                 .optJSONObject(0)
                 .optJSONObject("o1")
                 .optString("value");
+        return value;
+    }
+
+    public static String typeOfResponse(JSONObject json)
+    {
+        String value = new JSONObject(json
+                .optJSONArray("questions")
+                .optJSONObject(0)
+                .optJSONObject("question")
+                .getString("answers"))
+                .optJSONObject("results")
+                .optJSONArray("bindings")
+                .optJSONObject(0)
+                .optJSONObject("o1")
+                .optString("type");
         return value;
     }
 
