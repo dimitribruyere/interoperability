@@ -191,10 +191,10 @@ public class Query
                     toSend = toSend.concat("<br/><br/><h4>Element "+i+"</h4>"+
                             "<br/>EntityId = "+entity.getEntityId()+
                             "<br/>Label = "+entity.getLabel()+
-                            "<br/>Url = "+entity.getUrl()+
+                            "<br/>Url = <a href=\""+entity.getUrl()+"\" class=\"badge badge-info\">Link</a>"+
                             "<br/>Title = "+entity.getTitle()+
                             "<br/>Description = "+entity.getDescription()+
-                            "<br/>ConceptUri = "+entity.getConceptUri());
+                            "<br/>ConceptUri = <a href=\""+entity.getConceptUri()+"\" class=\"badge badge-info\">Link</a>");
                 }
             }
             else
