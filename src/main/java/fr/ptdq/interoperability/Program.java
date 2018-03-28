@@ -24,7 +24,10 @@ public class Program
     {
         System.out.println("Question = " + question);
         JSONObject json = Query.query(question);
-        String toDisplay = "Valeur = " + Query.valueOfResponse(json) + "<br />Type = " + Query.typeOfResponse(json) + "<br />Item lié = " + Query.itemOfResponse(json);
+        String toDisplay = "<p>Valeur = " + Query.valueOfResponse(json) + ""
+                + "<br />Type = " + Query.typeOfResponse(json) + ""
+                + "<br />Item lié = " + Query.itemOfResponse(json)+"</p>"
+                + "<br /><br /><pre><code>Requête reçu = "+json.toString(2)+"</pre></code>";
         return toDisplay;
     }
 }
