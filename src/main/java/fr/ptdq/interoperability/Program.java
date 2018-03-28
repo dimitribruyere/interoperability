@@ -27,6 +27,7 @@ public class Program
         String toDisplay = "<p><b>Valeur = </b>" + Query.valueOfResponse(json) + ""
                 + "<br /><b>Type = </b>" + Query.typeOfResponse(json) + ""
                 + "<br /><b>Item lié = </b>" + Query.itemOfResponse(json) + "</p>"
+                + "<br /><b>Recherche directe l'API pour chaque Item reçu= </b> <pre><code>" + Query.apiSearch(json) + "</pre></code>"
                 + "<br /><b>Requête reçu = </b> <pre><code>" + json.toString(2) + "</pre></code>";
         return toDisplay;
     }
