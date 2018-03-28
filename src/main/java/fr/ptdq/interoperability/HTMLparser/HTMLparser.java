@@ -154,7 +154,7 @@ public class HTMLparser
     {
         List<Publications> list = new ArrayList<>();
 
-        publis.forEach((title, allText) ->
+        publis.forEach((String title, String allText) ->
         {
             try
             {
