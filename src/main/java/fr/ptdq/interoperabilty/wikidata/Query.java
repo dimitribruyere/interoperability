@@ -216,7 +216,7 @@ public class Query
         List<String> matches = new ArrayList<>();
         while (matcher.find())
         {
-            matches.add("Item = "+matcher.group(0)+" Label = "+getValueOfItem(matcher.group(0))+" <br />\n");
+            matches.add("Item = "+matcher.group(0)+" Label = "+getValueOfItem(matcher.group(0))+" <a href=\"https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/Item:"+matcher.group(0)+"\"><span class=\"badge badge-pill badge-primary\">Lien vers la page Wikidata</span></a><br />\n");
         }
         return matches;
     }
