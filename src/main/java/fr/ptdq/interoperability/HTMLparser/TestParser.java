@@ -86,49 +86,40 @@ public class TestParser
             ItemIdValue itemPubliID = ItemIdValue.NULL;
             
             
-            Publications p = listPublications.get(0);
+            Publications p = listPublications.get(1);
             System.out.println(p);
             
-            /*Instance de */
-            org.wikidata.wdtk.datamodel.interfaces.Statement statement1 = StatementBuilder
+            /*Instance of */
+            org.wikidata.wdtk.datamodel.interfaces.Statement statementInstance = StatementBuilder
                 .forSubjectAndProperty(itemPubliID, propertyInstanceDe.getPropertyId())
                 .withValue(publiHC.getItemId()).build();
             
-//            /*Auteurs*/
-//            for (int i=0; i<p.getAuthors().size(); i++)
-//            {
-                org.wikidata.wdtk.datamodel.interfaces.Statement statement2;
-                statement2 = StatementBuilder
-                    .forSubjectAndProperty(itemPubliID, propertyAuthor.getPropertyId())
-                    .withValue(Datamodel.makeStringValue(p.getAuthors().get(0))).build();
-//            }
-
+            /*Co-authors*/
+            org.wikidata.wdtk.datamodel.helpers.StatementBuilder builder = StatementBuilder
+                .forSubjectAndProperty(itemPubliID, propertyContributor.getPropertyId());
+                
+            for (int i=0; i<p.getContributors().size(); i++)
+            {
+                builder.withValue(Datamodel.makeStringValue(p.getContributors().get(i)));
+            }
+            
+            org.wikidata.wdtk.datamodel.interfaces.Statement statementContributors = builder.build();
             
             
             /*Date*/
-            org.wikidata.wdtk.datamodel.interfaces.Statement statement3 = StatementBuilder
+            org.wikidata.wdtk.datamodel.interfaces.Statement statementDate = StatementBuilder
                 .forSubjectAndProperty(itemPubliID, propertyYearPubli.getPropertyId())
                 .withValue(Datamodel.makeStringValue(p.getDate())).build();
             
             
             
-            org.wikidata.wdtk.datamodel.interfaces.Statement statement4;
-            statement2 = StatementBuilder
-                .forSubjectAndProperty(itemPubliID, propertyContributor.getPropertyId())
-                .withValue(Datamodel.makeStringValue(p.getContributors().get(0))).build();
-            
-            
             ItemDocument itemDocument = ItemDocumentBuilder.forItemId(itemPubliID)
                 .withLabel(p.getTitle(), "fr")
-                .withStatement(statement1).build();
+                .withStatement(statementInstance)
+                .withStatement(statementContributors)
+                .withStatement(statementDate).build();
+            //ItemDocument newItemDocument = wbde.createItemDocument(itemDocument, "Publication of LaHC");
             
-            try
-            {
-                ItemDocument newItemDocument = wbde.createItemDocument(itemDocument, "Publication of LaHC");
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
         } catch (MediaWikiApiErrorException ex)
         {
             Logger.getLogger(TestParser.class.getName()).log(Level.SEVERE, null, ex);
