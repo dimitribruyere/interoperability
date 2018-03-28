@@ -32,7 +32,7 @@ public class TestJWBF
      * Sample bot that retrieves and edits an article.
      */
     public static void main(String[] args) throws IOException
-    {
+    {/*
         //Connexion
         System.out.println("Connexion");
         MediaWikiBot wikiBot = new MediaWikiBot("https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/");
@@ -72,18 +72,17 @@ public class TestJWBF
         //Si il s'agit d'un nouvel article
         System.out.println("Si il s'agit d'un nouvel article on créé un object SimpleArticle");
         SimpleArticle simpleArticle = new SimpleArticle(obj.toString(), "Item:Q999");
-
         //Envoi du nouvel article au wiki
         //wikiBot.writeContent(simpleArticle);
         //Lancement d'une requete
         System.out.println("Lancement d'une requete");
-        HttpURLConnection httpcon = (HttpURLConnection) ((new URL("https://wdaqua-qanary.univ-st-etienne.fr/gerbil-execute/wdaqua-core1,QueryExecuter/").openConnection()));
+        HttpURLConnection httpcon = (HttpURLConnection) ((new URL("https://wdaqua-core1.univ-st-etienne.fr/gerbil").openConnection()));
         httpcon.setDoOutput(true);
         httpcon.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
         httpcon.setRequestProperty("Accept", "application/json");
         httpcon.setRequestMethod("POST");
         httpcon.connect();
-        byte[] outputBytes = "query=pierre Maret university&lang=en&kb=wikidata".getBytes("UTF-8");
+        byte[] outputBytes = "query=pierre Maret sex&lang=en&kb=wikidata".getBytes("UTF-8");
         OutputStream os = httpcon.getOutputStream();
         os.write(outputBytes);
         os.close();
@@ -97,12 +96,18 @@ public class TestJWBF
         }
         in.close();
 
-        JSONObject queryResponse = new JSONObject(response);
+        JSONObject queryResponse = new JSONObject(response.toString());
+
 
         System.out.println("REPONSE REQUETE=" + response.toString());
-        //System.out.println("REPONSE REQUETE=" + queryResponse.toString(2));
-
-        //TESTS
+        System.out.println("REPONSE REQUETE=" + queryResponse.toString(2));
+         */
+        //https://wdaqua-qanary.univ-st-etienne.fr/gerbil-execute/wdaqua-core1,QueryExecuter/ => ERROR 500
+        //https://wdaqua-qanary.univ-st-etienne.fr/gerbil-execute/wdaqua-core1,%20QueryExecuter/ => ERROR 500
+        //https://wdaqua-qanary.univ-st-etienne.fr/gerbil/ => Page HTML
+        //https://wdaqua-qanary.univ-st-etienne.fr:8080/gerbil-execute/wdaqua-core1,%20QueryExecuter/ => Timeout
+        //https://wdaqua-biennale-design.univ-st-etienne.fr/gerbil/ => FileNotFoundException
+//TESTS
 //        System.out.println("SUMMARY="+article.getEditSummary());
 //        System.out.println("TEXT="+article.getText());
 //        System.out.println("EDITOR="+article.getEditor());
