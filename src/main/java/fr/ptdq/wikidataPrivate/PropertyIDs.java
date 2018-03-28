@@ -13,7 +13,7 @@ public class PropertyIDs
     public static String Membre  =   "P292";
     public static String Publication = "Q941";    
     public static String Auteur = "P298";
-    public static String AnneePubli = "P167";
+    public static String AnneePubli = "P384";
     public static String Co_auteur = "P377";
 
     /*** Equipes de recherche ***/
