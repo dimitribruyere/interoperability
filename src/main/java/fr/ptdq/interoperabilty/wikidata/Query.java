@@ -41,7 +41,7 @@ public class Query
         System.out.println(typeOfResponse(json));
         System.out.println(itemOfResponse(json));
         System.out.println(apiSearch(json));
-        
+
         System.out.println("\nTest 2");
         JSONObject json2 = query("instance de jacky lafrite");
         System.out.println(valueOfResponse(json2));
@@ -49,7 +49,7 @@ public class Query
         System.out.println(itemOfResponse(json2));
         System.out.println(apiSearch(json2));
         System.out.println(json2);
-        
+
         System.out.println(getValueOfItem("instance de Pierre Maret"));
     }
 
@@ -150,14 +150,14 @@ public class Query
             ApiConnection con = new ApiConnection("https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/api.php");
 
             con.login("Root@SamBot", "tcr0kgob5hgjejp2rrga8kocjq3jfc0l");
-            
+
             WikibaseDataFetcher wbdf = new WikibaseDataFetcher(con, siteIri);
             ArrayList<WbSearchEntitiesResult> entities = (ArrayList<WbSearchEntitiesResult>) wbdf.searchEntities(item, "fr");
-            
+
             String toSend = "";//entities.size()+" trouvés ";
-            if(entities.size()>0)
+            if (entities.size() > 0)
             {
-                toSend = toSend.concat(": "+entities.get(0).getLabel());
+                toSend = toSend.concat(": " + entities.get(0).getLabel());
             }
             return toSend;
         }
@@ -216,7 +216,7 @@ public class Query
         List<String> matches = new ArrayList<>();
         while (matcher.find())
         {
-            matches.add("Item = "+matcher.group(0)+" Label = "+getValueOfItem(matcher.group(0))+" <a href=\"https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/Item:"+matcher.group(0)+"\"><span class=\"badge badge-pill badge-primary\">Lien vers la page Wikidata</span></a><br />\n");
+            matches.add("Item = " + matcher.group(0) + " Label = " + getValueOfItem(matcher.group(0)) + " <a href=\"https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/Item:" + matcher.group(0) + "\" class=\"badge badge-pill badge-primary\">Lien vers la page Wikidata</a><br />\n");
         }
         return matches;
     }
