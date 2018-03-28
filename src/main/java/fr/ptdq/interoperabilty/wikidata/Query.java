@@ -77,11 +77,11 @@ public class Query
                     return results.optJSONObject("s0").optString("value");
                 }
             }
-            return "Non trouvé dans la réponse";
+            return "Parsing error";
         }
         catch (JSONException e)
         {
-            return "Non trouvé dans la réponse";
+            return "Parsing error";
         }
     }
 
@@ -154,11 +154,51 @@ public class Query
             WikibaseDataFetcher wbdf = new WikibaseDataFetcher(con, siteIri);
             ArrayList<WbSearchEntitiesResult> entities = (ArrayList<WbSearchEntitiesResult>) wbdf.searchEntities(item, "fr");
 
-            String toSend = "";//entities.size()+" trouvés ";
+            String toSend = "";//entities.size()+" trouvés : ";
             if (entities.size() > 0)
             {
-                toSend = toSend.concat(": " + entities.get(0).getLabel());
+                toSend = toSend.concat(entities.get(0).getLabel());
             }
+            return toSend;
+        }
+        catch (MediaWikiApiErrorException | LoginFailedException ex)
+        {
+            Logger.getLogger(Query.class.getName()).log(Level.SEVERE, null, ex);
+            return "Error";
+        }
+    }
+    
+    public static String getAllOfItem(String item)
+    {
+        try
+        {
+            String siteIri = "https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/";
+            WebResourceFetcherImpl.setUserAgent("Wikidata Toolkit EditOnlineDataExample");
+            ApiConnection con = new ApiConnection("https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/api.php");
+
+            con.login("Root@SamBot", "tcr0kgob5hgjejp2rrga8kocjq3jfc0l");
+
+            WikibaseDataFetcher wbdf = new WikibaseDataFetcher(con, siteIri);
+            ArrayList<WbSearchEntitiesResult> entities = (ArrayList<WbSearchEntitiesResult>) wbdf.searchEntities(item, "fr");
+
+            String toSend = "";//entities.size()+" trouvés : ";
+            if (entities.size() > 0)
+            {
+                int i=0;
+                for(WbSearchEntitiesResult entity : entities)
+                {
+                    i++;
+                    toSend = toSend.concat("<br/><br/><h4>Element "+i+"</h4>"+
+                            "<br/>EntityId = "+entity.getEntityId()+
+                            "<br/>Label = "+entity.getLabel()+
+                            "<br/>Url = "+entity.getUrl()+
+                            "<br/>Title = "+entity.getTitle()+
+                            "<br/>Description = "+entity.getDescription()+
+                            "<br/>ConceptUri = "+entity.getConceptUri());
+                }
+            }
+            else
+                System.out.println("0 élément trouvés avec l'API..");
             return toSend;
         }
         catch (MediaWikiApiErrorException | LoginFailedException ex)
