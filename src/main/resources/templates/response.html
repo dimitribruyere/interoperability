@@ -14,10 +14,20 @@ and open the template in the editor.
         <link href="css/main_style.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <h1>Réponses</h1>
+        <h2>Poser une autre question</h2>
+
+        <form action="response">
+            <div class="form-group">
+                <label for="question">Question </label>
+                <input type="text" class="form-control" name="questiontext" id="questiontext" placeholder="Entrer votre question"/>
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+        </form>
+
+        <h2>Réponses</h2>
         <h3>Question : <span th:text="${questiontext}"></span></h3>
 
-        <p><span th:text="${response}"></span></p>
+        <span th:utext="${response}"></span>
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
