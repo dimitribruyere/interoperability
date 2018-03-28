@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.json.JSONException;
 
 /**
  *
@@ -24,45 +25,81 @@ public class Query
 
     public static void main(String[] args)
     {
-        JSONObject json = query("Nom Pierre Maret");
+        System.out.println("Test 1");
+        JSONObject json = query("instance de Florence Garrelie");
         System.out.println(valueOfResponse(json));
         System.out.println(typeOfResponse(json));
         System.out.println(itemOfResponse(json));
+        
+        System.out.println("\nTest 2");
+        JSONObject json2 = query("Q886");
+        System.out.println(valueOfResponse(json2));
+        System.out.println(typeOfResponse(json2));
+        System.out.println(itemOfResponse(json2));
     }
 
     public static String valueOfResponse(JSONObject json)
     {
-        String value = new JSONObject(json
+        try
+        {
+            JSONObject results = new JSONObject(json
                 .optJSONArray("questions")
                 .optJSONObject(0)
                 .optJSONObject("question")
                 .getString("answers"))
                 .optJSONObject("results")
                 .optJSONArray("bindings")
-                .optJSONObject(0)
-                .optJSONObject("o1")
-                .optString("value");
-        return value;
+                .optJSONObject(0);
+            
+            if(!results.isNull("o1"))
+                return results.optJSONObject("o1").optString("value");
+            else
+            {
+                if(!results.isNull("s0"))
+                    return results.optJSONObject("s0").optString("value");
+            }
+            return "Parsing error";
+        }
+        catch (JSONException e)
+        {
+            return "Parsing error";
+        }
     }
 
     public static String typeOfResponse(JSONObject json)
     {
-        String value = new JSONObject(json
-                .optJSONArray("questions")
-                .optJSONObject(0)
-                .optJSONObject("question")
-                .getString("answers"))
-                .optJSONObject("results")
-                .optJSONArray("bindings")
-                .optJSONObject(0)
-                .optJSONObject("o1")
-                .optString("type");
-        return value;
+        try
+        {
+            JSONObject results = new JSONObject(json
+                    .optJSONArray("questions")
+                    .optJSONObject(0)
+                    .optJSONObject("question")
+                    .getString("answers"))
+                    .optJSONObject("results")
+                    .optJSONArray("bindings")
+                    .optJSONObject(0);
+
+            if(!results.isNull("o1"))
+                return results.optJSONObject("o1").optString("type");
+            else
+            {
+                if(!results.isNull("s0"))
+                    return results.optJSONObject("s0").optString("type");
+            }
+
+            return "Parsing error";
+        }
+        catch(JSONException e)
+        {
+            return "Parsing error";
+        }
     }
 
     public static String itemOfResponse(JSONObject json)
     {
-        String value = json
+        try
+        {
+            String value = json
                 .optJSONArray("questions")
                 .optJSONObject(0)
                 .optJSONObject("question")
@@ -72,8 +109,12 @@ public class Query
                 .split("<")[1]
                 .split(">")[0]
                 .split("entity/")[1];
-        return value;
-
+            return value;
+        }
+        catch(Exception e)
+        {
+            return "Parsing error";
+        }
     }
 
     public static JSONObject query(String query)
