@@ -5,6 +5,7 @@
  */
 package fr.ptdq.interoperabilty.wikidata;
 
+import static fr.ptdq.interoperabilty.wikidata.Main.siteIri;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,7 +16,16 @@ import java.util.logging.Logger;
 import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.*;
 import org.json.JSONException;
+import org.wikidata.wdtk.util.WebResourceFetcherImpl;
+import org.wikidata.wdtk.wikibaseapi.ApiConnection;
+import org.wikidata.wdtk.wikibaseapi.LoginFailedException;
+import org.wikidata.wdtk.wikibaseapi.WbSearchEntitiesResult;
+import org.wikidata.wdtk.wikibaseapi.WikibaseDataFetcher;
+import org.wikidata.wdtk.wikibaseapi.apierrors.MediaWikiApiErrorException;
 
 /**
  *
@@ -30,12 +40,17 @@ public class Query
         System.out.println(valueOfResponse(json));
         System.out.println(typeOfResponse(json));
         System.out.println(itemOfResponse(json));
+        System.out.println(apiSearch(json));
         
         System.out.println("\nTest 2");
-        JSONObject json2 = query("Q886");
+        JSONObject json2 = query("instance de jacky lafrite");
         System.out.println(valueOfResponse(json2));
         System.out.println(typeOfResponse(json2));
         System.out.println(itemOfResponse(json2));
+        System.out.println(apiSearch(json2));
+        System.out.println(json2);
+        
+        System.out.println(getValueOfItem("instance de Pierre Maret"));
     }
 
     public static String valueOfResponse(JSONObject json)
@@ -43,26 +58,30 @@ public class Query
         try
         {
             JSONObject results = new JSONObject(json
-                .optJSONArray("questions")
-                .optJSONObject(0)
-                .optJSONObject("question")
-                .getString("answers"))
-                .optJSONObject("results")
-                .optJSONArray("bindings")
-                .optJSONObject(0);
-            
-            if(!results.isNull("o1"))
+                    .optJSONArray("questions")
+                    .optJSONObject(0)
+                    .optJSONObject("question")
+                    .getString("answers"))
+                    .optJSONObject("results")
+                    .optJSONArray("bindings")
+                    .optJSONObject(0);
+
+            if (!results.isNull("o1"))
+            {
                 return results.optJSONObject("o1").optString("value");
+            }
             else
             {
-                if(!results.isNull("s0"))
+                if (!results.isNull("s0"))
+                {
                     return results.optJSONObject("s0").optString("value");
+                }
             }
-            return "Parsing error";
+            return "Non trouvé dans la réponse";
         }
         catch (JSONException e)
         {
-            return "Parsing error";
+            return "Non trouvé dans la réponse";
         }
     }
 
@@ -79,17 +98,21 @@ public class Query
                     .optJSONArray("bindings")
                     .optJSONObject(0);
 
-            if(!results.isNull("o1"))
+            if (!results.isNull("o1"))
+            {
                 return results.optJSONObject("o1").optString("type");
+            }
             else
             {
-                if(!results.isNull("s0"))
+                if (!results.isNull("s0"))
+                {
                     return results.optJSONObject("s0").optString("type");
+                }
             }
 
             return "Parsing error";
         }
-        catch(JSONException e)
+        catch (JSONException e)
         {
             return "Parsing error";
         }
@@ -100,20 +123,48 @@ public class Query
         try
         {
             String value = json
-                .optJSONArray("questions")
-                .optJSONObject(0)
-                .optJSONObject("question")
-                .optJSONArray("language")
-                .optJSONObject(0)
-                .optString("SPARQL")
-                .split("<")[1]
-                .split(">")[0]
-                .split("entity/")[1];
+                    .optJSONArray("questions")
+                    .optJSONObject(0)
+                    .optJSONObject("question")
+                    .optJSONArray("language")
+                    .optJSONObject(0)
+                    .optString("SPARQL")
+                    .split("<")[1]
+                    .split(">")[0]
+                    .split("entity/")[1];
+
             return value;
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             return "Parsing error";
+        }
+    }
+
+    public static String getValueOfItem(String item)
+    {
+        try
+        {
+            String siteIri = "https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/index.php/";
+            WebResourceFetcherImpl.setUserAgent("Wikidata Toolkit EditOnlineDataExample");
+            ApiConnection con = new ApiConnection("https://wdaqua-biennale-design.univ-st-etienne.fr/wikibase/api.php");
+
+            con.login("Root@SamBot", "tcr0kgob5hgjejp2rrga8kocjq3jfc0l");
+            
+            WikibaseDataFetcher wbdf = new WikibaseDataFetcher(con, siteIri);
+            ArrayList<WbSearchEntitiesResult> entities = (ArrayList<WbSearchEntitiesResult>) wbdf.searchEntities(item, "fr");
+            
+            String toSend = "";//entities.size()+" trouvés ";
+            if(entities.size()>0)
+            {
+                toSend = toSend.concat(": "+entities.get(0).getLabel());
+            }
+            return toSend;
+        }
+        catch (MediaWikiApiErrorException | LoginFailedException ex)
+        {
+            Logger.getLogger(Query.class.getName()).log(Level.SEVERE, null, ex);
+            return "Error";
         }
     }
 
@@ -127,7 +178,7 @@ public class Query
             httpcon.setRequestProperty("Accept", "application/json");
             httpcon.setRequestMethod("POST");
             httpcon.connect();
-            String toSend = "query=" + query + "&lang=en&kb=student";
+            String toSend = "query=" + query + "&lang=fr&kb=student";
             byte[] outputBytes = toSend.getBytes("UTF-8");
             try (OutputStream os = httpcon.getOutputStream())
             {
@@ -156,5 +207,17 @@ public class Query
             Logger.getLogger(Query.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public static List<String> apiSearch(JSONObject json)
+    {
+        Pattern pattern = Pattern.compile("Q\\d{1,5}");
+        Matcher matcher = pattern.matcher(json.toString());
+        List<String> matches = new ArrayList<>();
+        while (matcher.find())
+        {
+            matches.add("Item = "+matcher.group(0)+" Label = "+getValueOfItem(matcher.group(0))+" <br />\n");
+        }
+        return matches;
     }
 }
